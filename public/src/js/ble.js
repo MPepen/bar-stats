@@ -36,7 +36,7 @@ class BLEHandler {
             filters: [
                 {namePrefix: name},
             ],
-            optionalServices: [UART_SERVICE_UUID, SENSOR_SERVICE_UUID],
+            optionalServices: [UART_SERVICE_UUID], // changed to use only UART service
         })
         .then((d) => {
             console.info('connected to device: ', d);
@@ -46,24 +46,24 @@ class BLEHandler {
         .then((srv) => {
             console.info('connected to gatt server: ', srv);
             this.server = srv;
-            return this.server.getPrimaryService(SENSOR_SERVICE_UUID);
+            return this.server.getPrimaryService(UART_SERVICE_UUID);// changed to use only UART service
         })
         .then((svc) => {
             console.info('got service: ', svc);
             this.service = svc;
-            return this.service.getCharacteristic(ACCEL_CHAR_UUID);
+            return this.service.getCharacteristic(UART_CHAR_RX_UUID);// changed to only use RX services
         })
         .then((c) => {
             console.info('got accel characteristic: ', c);
             this.accelChar = c;
             this.accelChar.addEventListener('characteristicvaluechanged', onNotificationEvent);
-            return this.service.getCharacteristic(MAG_CHAR_UUID);
+            return this.service.getCharacteristic(UART_CHAR_RX_UUID);// changed to only use RX services
         })
         .then((c) => {
             console.info('got mag characteristic: ', c);
             this.magChar = c;
             this.magChar.addEventListener('characteristicvaluechanged', onNotificationEvent);
-            return this.service.getCharacteristic(gyroChar);
+            return this.service.getCharacteristic(UART_CHAR_RX_UUID);// changed to only use RX services
         })
         .then((c) => {
             console.info('got characteristic: ', c);
